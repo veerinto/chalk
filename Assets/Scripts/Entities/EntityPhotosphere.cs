@@ -1,4 +1,4 @@
-﻿/* File: LoadEnvironment.cs
+﻿/* File: EntityPhotosphere.cs
  * Description: #DESCRIPTION#
  * How to use: #INSTRUCTIONS#
 */
@@ -8,11 +8,8 @@ using System.Collections;
 using Interlude;
 
 
-namespace Interlude {
-	public class IdentityPhotosphere : MonoBehaviour {
-
-		[SerializeField]
-		GameObject managerEnvironment;
+namespace VeerChalk {
+	public class EntityPhotosphere : MonoBehaviour {
 
 		[SerializeField]
 		GameObject environment;
@@ -28,7 +25,7 @@ namespace Interlude {
 
 		void OnTriggerEnter(Collider hit) {
 			if (hit.tag == "Player") {
-				managerEnvironment.GetComponent<ManagerEnvironment> ().LoadEnvironment (environment);
+				ManagerEnvironment.instance.LoadEnvironment (environment);
 			}
 		}
 

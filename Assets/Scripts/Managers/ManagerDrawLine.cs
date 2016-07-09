@@ -1,6 +1,6 @@
 ﻿/* File: ManagerDrawLine.cs
- * Description: #DESCRIPTION#
- * How to use: #INSTRUCTIONS#
+ * Description: a singleton that implements draw-on-air functionality.
+ * How to use: put script on a root-level GameObject in your scene.
 */
 
 using UnityEngine;
@@ -8,8 +8,26 @@ using System.Collections;
 using Interlude;
 
 
-namespace Interlude {
-	public class ManagerDrawLine : MonoBehaviour {
+namespace VeerChalk {
+	public sealed class ManagerDrawLine : MonoBehaviour {
+
+		//// <singleton>
+		// Boilerplate for singleton pattern
+		public static ManagerDrawLine instance = null;
+
+		// This whole Awake() is singleton boilerplate
+		void Awake() {
+
+			if (instance == null) {
+				instance = this;
+			} else if (instance != null) {
+				Destroy (this);
+			}
+
+			DontDestroyOnLoad (this);
+		}
+
+		//// </singleton>
 
 		[SerializeField] SteamVR_TrackedObject trackedObj;
 		[SerializeField] Material lineMaterial;
