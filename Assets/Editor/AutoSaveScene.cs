@@ -24,7 +24,7 @@ public class AutoSaveScene
 
 	public static void RegisterOnEditorUpdate(int interval)
 	{
-		Debug.Log ("Enabling AutoSave every " + minutesAutoSave.ToString() + " minutes.");
+		Debug.Log ("AutoSaveScene.cs: enabling AutoSave every " + minutesAutoSave.ToString() + " minutes.");
 
 		updateInterval = new TimeSpan(0, interval, 0);
 		EditorApplication.update += OnUpdate;

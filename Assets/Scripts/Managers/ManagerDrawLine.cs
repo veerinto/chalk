@@ -5,11 +5,20 @@
 
 using UnityEngine;
 using System.Collections;
+using VeerChalk;
 using Interlude;
 
 
 namespace VeerChalk {
-	public sealed class ManagerDrawLine : MonoBehaviour {
+	public sealed class ManagerDrawLine : Photon.PunBehaviour {
+		
+		[SerializeField] SteamVR_TrackedObject trackedObj;
+		[SerializeField] Material lineMaterial;
+		[SerializeField] float lineWidth = 0.01f;
+
+		private GraphicsLineRenderer lineCurrent;
+		private int countClicks;
+
 
 		//// <singleton>
 		// Boilerplate for singleton pattern
@@ -29,17 +38,11 @@ namespace VeerChalk {
 
 		//// </singleton>
 
-		[SerializeField] SteamVR_TrackedObject trackedObj;
-		[SerializeField] Material lineMaterial;
-		[SerializeField] float lineWidth = 0.01f;
-
-		private GraphicsLineRenderer lineCurrent;
-		private int countClicks;
 
 		void Start () {
-		
 		}
-		
+
+		// TODO: make this callable and/or pure
 		void Update () {
 			if (trackedObj == null) {
 				return;
@@ -68,9 +71,21 @@ namespace VeerChalk {
 
 			} else if (device.GetTouch (SteamVR_Controller.ButtonMask.Trigger)) {
 				lineCurrent.AddPoint (trackedObj.transform.position);
-
-
 			}
 		}
+
+		void DrawLine(SteamVR_TrackedObject trackedPen) {
+			if (trackedPen == null) {
+				return;
+			}
+
+
+		}
+
+		void UndrawLine(SteamVR_TrackedObject trackedEraser) {
+		}
+
+
+
 	}
 }

@@ -6,11 +6,17 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Interlude;
+using VeerChalk;
 
 
 namespace VeerChalk {
-	public sealed class ManagerSpawnEntities : MonoBehaviour {
+	public sealed class ManagerSpawnEntities : Photon.PunBehaviour {
+
+		[SerializeField]
+		GameObject[] arrayEntities;
+
+		// TODO: expose this to ManagerNetwork
+		public Dictionary<int, Entity> entities = new Dictionary<int, Entity>();
 
 		//// <singleton>
 		// Boilerplate for singleton pattern
@@ -30,33 +36,82 @@ namespace VeerChalk {
 
 		//// </singleton>
 
-		[SerializeField]
-		GameObject prefabPlayer;
-
-		// TODO: expose to ManagerNetwork
-		public Dictionary<int, GameObject> entities = new Dictionary<int, GameObject>();
 
 		void Start() {
-			StartCoroutine (SpawnEntity (prefabPlayer));
 		}
 
-		IEnumerator SpawnEntity(GameObject _prefabEntity) {
-			GameObject entity = (GameObject)Instantiate (_prefabEntity);
-			entity.transform.parent = this.transform;
-			entities.Add (entity.GetInstanceID(), entity);
+
+		// TEMP
+		public void StartDefault() {
+			foreach (GameObject go in arrayEntities) {
+				if (go.name == "Camera") {
+					StartCoroutine (SpawnEntity (go));
+				} else {
+					StartCoroutine (SpawnEntity (go, new Vector3 (Random.Range ((int)-2, (int)2), 0, 0), Quaternion.identity, true, false));
+				}
+			}
+		}
+			
+
+		public IEnumerator SpawnEntity(GameObject prefab) {
+			GameObject goEntity = (GameObject)Instantiate (prefab);
+			goEntity.transform.parent = this.transform;
+
+			// Adds entity to public dictionary called entities
+			Entity entity = new Entity (goEntity);
+			entities.Add (goEntity.GetInstanceID(), entity);
 
 			yield return null;
 		}
 
-		IEnumerator SpawnEntity(GameObject _prefabEntity, Vector3 position, Quaternion rotation) {
-			GameObject entity = (GameObject)Instantiate (_prefabEntity, position, rotation);
-			entity.transform.parent = this.transform;
-			entities.Add (entity.GetInstanceID(), entity);
+		public IEnumerator SpawnEntity(GameObject prefab, Vector3 position, Quaternion rotation) {
+			GameObject goEntity = (GameObject)Instantiate (prefab, position, rotation);
+			goEntity.transform.parent = this.transform;
+
+			// Adds entity to public dictionary called entities
+			Entity entity = new Entity (goEntity);
+			entities.Add (goEntity.GetInstanceID(), entity);
+
+			yield return null;
+		}
+
+		public IEnumerator SpawnEntity(GameObject prefab, Vector3 position, Quaternion rotation, bool _isNetworked, bool _isPlayer) {
+			GameObject goEntity = (GameObject)Instantiate (prefab, position, rotation);
+			goEntity.transform.parent = this.transform;
+
+			// Adds entity to public dictionary called entities
+			Entity entity = new Entity (goEntity, _isNetworked, _isPlayer);
+			entities.Add (goEntity.GetInstanceID(), entity);
 
 			yield return null;
 		}
 			
 
+	}
+
+	public sealed class Entity {
+		public bool isPlayer { get; private set; }
+		public bool isNetworked { get; private set; }
+		public int instanceID { get; set; }
+		public GameObject gameObject;
+
+		public Entity(GameObject _gameObject) {
+			this.gameObject = _gameObject;
+			this.isNetworked = false;
+			this.isPlayer = false;
+		}
+
+		public Entity(GameObject _gameObject, bool _isNetworked) {
+			this.gameObject = _gameObject;
+			this.isNetworked = _isNetworked;
+			this.isPlayer = false;
+		}
+
+		public Entity(GameObject _gameObject, bool _isNetworked, bool _isPlayer) {
+			this.gameObject = _gameObject;
+			this.isNetworked = _isNetworked;
+			this.isPlayer = _isPlayer;
+		}
 	}
 		
 }

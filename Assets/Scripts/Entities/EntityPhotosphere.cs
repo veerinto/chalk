@@ -25,7 +25,7 @@ namespace VeerChalk {
 
 		void OnTriggerEnter(Collider hit) {
 			if (hit.tag == "Player") {
-				ManagerEnvironment.instance.LoadEnvironment (environment);
+				//ManagerEnvironment.instance.LoadEnvironment (environment);
 			}
 		}
 
